@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Meeting Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1e; /* Dark background */
+            color: #ffffff; /* Light text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #2D8CFF; /* Zoom Blue */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Darker shadow for depth */
+            text-align: center;
+            color: #ffffff; /* Light text for contrast */
+        }
+        h1, h2 {
+            color: #ffffff; /* Maintaining light text for headers */
+        }
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #f0f0f0; /* Slightly off-white for text */
+        }
+        input[type="time"] {
+            border: 1px solid #2D8CFF; /* Border color to match theme */
+            background-color: #1c1c1e; /* Dark background for input */
+            color: #ffffff; /* Light text color */
+            border-radius: 4px;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #000000; /* Black buttons */
+            color: #ffffff; /* White text */
+            border: 1px solid #2D8CFF; /* Blue border */
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #333333; /* Darker grey on hover */
+            border-color: #1a6dbb; /* Darker blue border on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Auto Meeting Settings</h1>
+        <h2>Auto Leave Settings</h2>
+        <label for="leaveTime">Set Auto Leave Time:</label>
+        <input type="time" id="leaveTime">
+        <button onclick="setAutoLeave()">Set Auto Leave Time</button>
+
+        <button onclick="autoLeaveWhenHostEnds()">Auto Leave when host ends the meeting</button>
+
+        <h2>Auto Join Settings</h2>
+        <label for="joinTime">Set Auto Join Time:</label>
+        <input type="time" id="joinTime">
+        <button onclick="setAutoJoin()">Set Auto Join Time</button>
+    </div>
+
+    <script>
+        function setAutoLeave() {
+            var leaveTimeInput = document.getElementById("leaveTime").value;
+            console.log(leaveTimeInput);
+            var leaveTimeMilliseconds = new Date('1970-01-01T' + leaveTimeInput + 'Z').getTime();
+            localStorage.setItem("autoLeaveTime", leaveTimeMilliseconds);
+            alert("Auto leave time set successfully!");
+        }
+        window.addEventListener('unload', () => {
+            autoLeaveWhenHostEnds();
+        });
+
+
+        function autoLeaveWhenHostEnds() {
+            // Check if auto-leave time is set
+            const autoLeaveTime = localStorage.getItem("autoLeaveTime");
+            if (autoLeaveTime) {
+                // Redirect to the login page
+                window.location.href = "/"; // Replace with your login page URL
+
+                // Set a timeout to rejoin the meeting after the auto-leave time
+                setTimeout(() => {
+                    // Implement logic to rejoin the meeting
+                    // e.g., window.location.href = "index.html"; // Replace with your meeting page URL
+                }, autoLeaveTime - Date.now());
+            } else {
+                alert("Auto Leave when host ends the meeting triggered!");
+            }
+        }
+    </script>
+</body>
+</html>
